@@ -1,3 +1,14 @@
+/* Return a formatted date in the MM/DD/YYYY HH:MM:SS AM/PM
+ * format
+ */
+function getFormattedTime(date) {
+  return (
+    `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}` 
+    + ` ${date.getHours() > 12 ? date.getHours() - 12 : date.getHours() }:${date.getMinutes()}:${date.getSeconds()}`
+    + ` ${date.getHours() > 12 ? 'PM' : 'AM'}`
+  );
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   try {
     let app = firebase.app();
@@ -7,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(docs => {
         docs.forEach(doc => {
           const data = doc.data();
-          const date = data.submittedOn.toDate()
-          const f_date = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes()} ${date.getHours() > 12 ? 'AM' : 'PM' }`
+          const f_date = getFormattedTime(data.submittedOn.toDate());
 
           const row = `
             <tr>

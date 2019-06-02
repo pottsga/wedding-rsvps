@@ -14,13 +14,22 @@ const transporter = nodemailer.createTransport({
 
 const toEmails = 'pottsga@gmail.com,phelpsmichelle5@gmail.com'
 
+/* Return a formatted date in the MM/DD/YYYY HH:MM:SS AM/PM
+ * format
+ */
+function getFormattedTime(date) {
+  return (
+    `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}` 
+    + ` ${date.getHours() > 12 ? date.getHours() - 12 : date.getHours() }:${date.getMinutes()}:${date.getSeconds()}`
+    + ` ${date.getHours() > 12 ? 'PM' : 'AM'}`
+  );
+}
+
 exports.sendEmail = functions.firestore
   .document('rsvps/{rsvpId}')
   .onCreate((snap, context) => {
     const data = snap.data();
-    const date = data.submittedOn.toDate()
-    const f_date = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes()} ${date.getHours() > 12 ? 'AM' : 'PM' }`
-    console.log(data.firstName, data.lastName);
+    const f_date = getFormattedTime(data.submittedOn.toDate());
 
     const mailOptions = {
       from: 'pottsga.functions@gmail.com',
